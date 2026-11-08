@@ -895,3 +895,61 @@ button:not(#startBtn):hover {
         padding: 18px;
     }
 }
+
+#staffResetBtn {
+    background: rgba(30, 15, 25, 0.95);
+    color: #ffffff;
+    border: 2px solid #d92745;
+    border-radius: 12px;
+
+    padding: 15px 26px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.45);
+    transition: all 0.2s ease;
+}
+
+#staffResetBtn:hover {
+    background: #b51d37;
+    transform: translateY(-2px);
+}
+
+/* Staff reset button positioning */
+.staff-controls {
+    position: fixed !important;
+    bottom: 24px !important;
+    right: 24px !important;
+    left: auto !important;
+    width: auto !important;
+    z-index: 1000;
+}
+
+#staffResetBtn {
+    width: auto !important;
+    min-width: 190px;
+}
+
+
+/* AI interrogation question counter */
+.chat-notice {
+    display: inline-block;
+    background: rgba(130, 25, 45, 0.2);
+    color: #ffd166;
+    border: 1px solid #a52a43;
+    border-radius: 10px;
+    padding: 12px 20px;
+    margin-top: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.interrogation-info {
+    color: #d6c6ca;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-top: 12px;
+}
