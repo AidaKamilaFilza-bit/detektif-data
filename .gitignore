@@ -1,0 +1,31 @@
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Private solution
+detektif_data_dataset/private/
+*PRIVATE.db
+
+# Local Python environment
+.venv/
+__pycache__/
+*.pyc
+
+# Local databases and player records
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Temporary files
+.pytest_cache/
+.DS_Store
+
+
+# Keep investigation data and answer-generating scripts private
+detektif_data_dataset/evidence_csv/
+detektif_data_dataset/generate_dataset.py
+detektif_data_dataset/validate_dataset.py
+

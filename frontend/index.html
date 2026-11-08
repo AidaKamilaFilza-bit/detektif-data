@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Detektif Data | Cyber Investigation</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="logo">◈ DETEKTIF DATA</div>
+        <div class="status">● SYSTEM ONLINE</div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <p class="eyebrow">CLASSIFIED INVESTIGATION</p>
+
+            <h1>MISTERI DI<br>FESTIVAL IDEA</h1>
+
+            <p class="description">
+                Four suspects. One mysterious incident.
+                Examine the evidence, interrogate suspects,
+                and uncover the truth.
+            </p>
+
+            <button id="startBtn">
+                BEGIN INVESTIGATION →
+            </button>
+        </section>
+
+        <section id="investigation" class="hidden">
+            <h2>INVESTIGATION DASHBOARD</h2>
+
+            
+<div class="cards">
+    <div class="card" onclick="showSuspects()">
+        <h3>👥 SUSPECTS</h3>
+        <p>Investigate Alya, Faris, Daniel and Nadia</p>
+    </div>
+
+   
+<div class="card" onclick="showEvidence()">
+    <h3>🔎 EVIDENCE</h3>
+    <p>Examine digital investigation records →</p>
+</div>
+
+
+   <div class="card" onclick="showInterrogation()">
+    <h3>💬 INTERROGATION</h3>
+    <p>Question suspects using AI →</p>
+</div>
+
+   
+<div class="card" onclick="showAccusation()">
+    <h3>⚖️ FINAL ACCUSATION</h3>
+    <p>Submit your investigation findings →</p>
+</div>
+
+</div>
+
+<section id="suspectSection" class="hidden">
+    <h2>👥 SUSPECT FILES</h2>
+    <p>Select a suspect to investigate.</p>
+
+    <div class="cards">
+        <div class="card" onclick="selectSuspect('Alya')">
+            <h3>ALYA</h3>
+            <p>Open suspect profile →</p>
+        </div>
+
+        <div class="card" onclick="selectSuspect('Faris')">
+            <h3>FARIS</h3>
+            <p>Open suspect profile →</p>
+        </div>
+
+        <div class="card" onclick="selectSuspect('Daniel')">
+            <h3>DANIEL</h3>
+            <p>Open suspect profile →</p>
+        </div>
+
+        <div class="card" onclick="selectSuspect('Nadia')">
+            <h3>NADIA</h3>
+            <p>Open suspect profile →</p>
+        </div>
+    </div>
+</section>
+
+<section id="suspectProfile" class="hidden">
+    <h2 id="suspectName"></h2>
+    <p>Suspect investigation file opened.</p>
+
+    <button onclick="backToSuspects()">
+        ← BACK TO SUSPECTS
+    </button>
+</section>
+
+<section id="evidenceSection" class="hidden">
+    <h2>🔎 DIGITAL EVIDENCE BOARD</h2>
+
+    <p>
+        Search the festival's digital records
+        and uncover inconsistencies.
+    </p>
+
+    <div class="evidence-controls">
+        <label for="evidencePerson">Suspect</label>
+        <select id="evidencePerson">
+            <option value="Alya">Alya</option>
+            <option value="Faris">Faris</option>
+            <option value="Daniel">Daniel</option>
+            <option value="Nadia">Nadia</option>
+        </select>
+
+        <label for="evidenceType">Evidence Type</label>
+        <select id="evidenceType">
+            <option value="gate_scans">Gate Scans</option>
+            <option value="wifi_logins">Wi-Fi Logins</option>
+            <option value="cashless_payments">Payments</option>
+            <option value="cctv_log">CCTV Records</option>
+            <option value="locker_access">Locker Access</option>
+            <option value="booth_roster">Booth Roster</option>
+        </select>
+
+        <button onclick="loadEvidence()">
+            SEARCH EVIDENCE
+        </button>
+    </div>
+
+    <div id="evidenceResults">
+        <p>Select a suspect and evidence type to begin.</p>
+    </div>
+</section>
+
+
+<section id="interrogationSection" class="hidden">
+    <h2>💬 SUSPECT INTERROGATION</h2>
+
+    <p>
+        Select a suspect and ask questions.
+        Compare their statements against the evidence.
+    </p>
+
+    <div class="interrogation-controls">
+        <label for="interrogationSuspect">
+            SELECT SUSPECT
+        </label>
+
+        <select id="interrogationSuspect">
+            <option value="Alya">Alya</option>
+            <option value="Faris">Faris</option>
+            <option value="Daniel">Daniel</option>
+            <option value="Nadia">Nadia</option>
+        </select>
+    </div>
+
+    <div id="chatMessages" class="chat-messages">
+        <div class="chat-bubble system-message">
+            Interrogation room ready.
+            Select a suspect to begin questioning.
+        </div>
+    </div>
+
+    <div class="chat-input-area">
+        <input
+            type="text"
+            id="chatInput"
+            placeholder="Ask your question..."
+            maxlength="300"
+        >
+
+        
+<button id="sendChatBtn">
+    SEND
+</button>
+
+    </div>
+
+    <p class="chat-notice">
+        AI interrogation will be activated
+        after backend integration.
+    </p>
+</section>
+
+
+<section id="accusationSection" class="hidden">
+    <h2>⚖️ FINAL ACCUSATION</h2>
+
+    <p>
+        Your investigation is coming to an end.
+        Review the evidence and identify the culprit.
+    </p>
+
+    <div class="accusation-form">
+        <label for="accusedSuspect">WHO IS THE CULPRIT?</label>
+
+        <select id="accusedSuspect">
+            <option value="">Select a suspect</option>
+            <option value="Alya">Alya</option>
+            <option value="Faris">Faris</option>
+            <option value="Daniel">Daniel</option>
+            <option value="Nadia">Nadia</option>
+        </select>
+
+        <label for="accusationReason">
+            EXPLAIN YOUR REASONING
+        </label>
+
+        <textarea
+            id="accusationReason"
+            rows="5"
+            maxlength="1000"
+            placeholder="Which evidence supports your accusation?"
+        ></textarea>
+
+        
+<button id="submitAccusationBtn">
+    SUBMIT FINAL ACCUSATION
+</button>
+
+
+        <div id="accusationResult"></div>
+    </div>
+</section>
+
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
