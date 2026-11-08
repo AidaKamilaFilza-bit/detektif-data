@@ -1,11 +1,73 @@
 const PLAYER_ID_KEY = "detektif_data_player_id";
 
-let playerId = localStorage.getItem(PLAYER_ID_KEY);
+async function loadPlayerQuestionStatus() {
+    if (!playerId) {
+    const counter = document.querySelector(".chat-notice");
+    const sendButton = document.getElementById("sendChatBtn");
 
-if (!playerId) {
-    playerId = crypto.randomUUID();
-    localStorage.setItem(PLAYER_ID_KEY, playerId);
+    if (counter) {
+        counter.textContent = "🔐 Please ask staff to start a new investigation.";
+    }
+
+    if (sendButton) {
+        sendButton.disabled = true;
+    }
+
+    return;
 }
+
+    try {
+        const response = await fetch(
+            `https://detektif-data-backend.onrender.com/player/status/${playerId}`
+        );
+
+        if (response.status === 403) {
+    playerId = null;
+    sessionStorage.removeItem(PLAYER_ID_KEY);
+
+    const counter = document.querySelector(".chat-notice");
+    const sendButton = document.getElementById("sendChatBtn");
+
+    if (counter) {
+        counter.textContent =
+            "🔐 Session expired. Please ask staff to start a new investigation.";
+    }
+
+    if (sendButton) {
+        sendButton.disabled = true;
+    }
+
+    return;
+}
+
+if (!response.ok) {
+    console.warn("Unable to load player status:", response.status);
+    return;
+}
+
+        const data = await response.json();
+
+        questionsUsed = data.questions_used;
+
+        const counter = document.querySelector(".chat-notice");
+
+        if (counter) {
+            counter.textContent =
+                `${questionsUsed}/${MAX_QUESTIONS} AI questions used`;
+        }
+
+        const sendButton = document.getElementById("sendChatBtn");
+
+        if (sendButton) {
+            sendButton.disabled = questionsUsed >= MAX_QUESTIONS;
+        }
+
+    } catch (error) {
+        console.error("Unable to load player status:", error);
+    }
+}
+
+let playerId = sessionStorage.getItem(PLAYER_ID_KEY);
 
 document.addEventListener("DOMContentLoaded", () => {
     const startButton = document.getElementById("startBtn");
@@ -178,7 +240,7 @@ async function loadEvidence() {
 
     try {
         const response = await fetch(
-            `http://127.0.0.1:8000/evidence?${params}`
+            `https://detektif-data-backend.onrender.com/evidence?${params}`
         );
 
         if (!response.ok) {
@@ -262,7 +324,7 @@ function showInterrogation() {
 
 
 let questionsUsed = 0;
-const MAX_QUESTIONS = 3;
+const MAX_QUESTIONS = 5;
 let interrogationBusy = false;
 
 function addChatMessage(message, type) {
@@ -279,6 +341,14 @@ function addChatMessage(message, type) {
 }
 
 async function sendInterrogation() {
+        if (!playerId) {
+        addChatMessage(
+            "Please ask exhibition staff to start a new investigation before interrogating a suspect.",
+            "system-message"
+        );
+        return;
+    }
+
     if (interrogationBusy || questionsUsed >= MAX_QUESTIONS) {
         return;
     }
@@ -289,6 +359,8 @@ async function sendInterrogation() {
     const question = input.value.trim();
 
     if (!question) return;
+
+    let sessionUnauthorized = false;
 
     interrogationBusy = true;
     button.disabled = true;
@@ -303,7 +375,7 @@ async function sendInterrogation() {
 
     try {
         const response = await fetch(
-            "http://127.0.0.1:8000/interrogate",
+            "https://detektif-data-backend.onrender.com/interrogate",
             {
                 method: "POST",
                 headers: {
@@ -317,9 +389,22 @@ async function sendInterrogation() {
             }
         );
 
-        if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
-        }
+        if (response.status === 403) {
+            sessionUnauthorized = true;
+    loading.remove();
+
+    addChatMessage(
+        "Your investigation session is not authorized. Please ask staff to start a new investigation.",
+        "system-message"
+    );
+
+    button.disabled = true;
+    return;
+}
+
+if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+}
 
         const data = await response.json();
 
@@ -344,7 +429,7 @@ async function sendInterrogation() {
 
     } finally {
         interrogationBusy = false;
-        button.disabled = questionsUsed >= MAX_QUESTIONS;
+        button.disabled = sessionUnauthorized || questionsUsed >= MAX_QUESTIONS;
     }
 }
 
@@ -416,7 +501,7 @@ async function submitFinalAccusation() {
 
     try {
         const response = await fetch(
-            "http://127.0.0.1:8000/accuse",
+            "https://detektif-data-backend.onrender.com/accuse",
             {
                 method: "POST",
                 headers: {
@@ -471,4 +556,48 @@ document.addEventListener("DOMContentLoaded", () => {
     if (button) {
         button.addEventListener("click", submitFinalAccusation);
     }
+});
+
+
+document.getElementById("staffResetBtn").addEventListener("click", async () => {
+    const pin = prompt("Enter staff passphrase to start a new investigation:");
+
+    if (pin === null || !pin.trim()) return;
+
+    try {
+        const response = await fetch("https://detektif-data-backend.onrender.com/staff/reset", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ pin })
+        });
+
+        if (!response.ok) {
+            alert("Staff reset failed. Check your passphrase.");
+            return;
+        }
+
+        const data = await response.json();
+
+        playerId = data.player_id;
+        sessionStorage.setItem(PLAYER_ID_KEY, playerId);
+
+        questionsUsed = 0;
+
+        document.querySelector(".chat-notice").textContent =
+            `0/${MAX_QUESTIONS} AI questions used`;
+
+        alert("New investigation started! The next visitor has 5 AI questions.");
+
+        location.reload();
+
+    } catch (error) {
+        console.error(error);
+        alert("Unable to connect to the backend.");
+    }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadPlayerQuestionStatus();
 });
