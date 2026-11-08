@@ -1,3 +1,11 @@
+const PLAYER_ID_KEY = "detektif_data_player_id";
+
+let playerId = localStorage.getItem(PLAYER_ID_KEY);
+
+if (!playerId) {
+    playerId = crypto.randomUUID();
+    localStorage.setItem(PLAYER_ID_KEY, playerId);
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     const startButton = document.getElementById("startBtn");
@@ -21,9 +29,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 function showSuspects() {
+
+    // Hide suspect profile
     document.getElementById("suspectProfile")
         .classList.add("hidden");
 
+    // Hide interrogation room
+    document.getElementById("interrogationSection")
+        .classList.add("hidden");
+
+    // Hide evidence board
+    document.getElementById("evidenceSection")
+        .classList.add("hidden");
+
+    // Hide final accusation
+    document.getElementById("accusationSection")
+        .classList.add("hidden");
+
+    // Show suspect list
     document.getElementById("suspectSection")
         .classList.remove("hidden");
 }
@@ -37,14 +60,91 @@ function selectSuspect(name) {
 
     document.getElementById("suspectName")
         .textContent = "SUSPECT FILE: " + name;
+
+    // Match each suspect to their original portrait
+    const suspectImages = {
+        "Alya": "images/suspect-alya.png",
+        "Faris": "images/suspect-faris.png",
+        "Daniel": "images/suspect-daniel.png",
+        "Nadia": "images/suspect-nadia.png"
+    };
+
+    let photo = document.getElementById("suspectPhoto");
+
+    if (!photo) {
+        photo = document.createElement("img");
+        photo.id = "suspectPhoto";
+        photo.className = "suspect-photo";
+
+        document.getElementById("suspectName")
+            .insertAdjacentElement("afterend", photo);
+    }
+
+    photo.src = suspectImages[name] || "";
+    photo.alt = name + " suspect case file";
+    photo.style.display = suspectImages[name] ? "block" : "none";
+    // Suspect dossier information
+const suspectDetails = {
+    Alya: {
+        role: "Event Committee — Booth Operations"
+    },
+    Faris: {
+        role: "Technical Team — AV & Equipment"
+    },
+    Daniel: {
+        role: "Innovation Team — Prototype Lead"
+    },
+    Nadia: {
+        role: "Logistics Team — Booth & Inventory"
+    }
+};
+
+const details = suspectDetails[name];
+
+document.getElementById("dossierName").textContent = name;
+
+document.getElementById("dossierRole").textContent =
+    details ? details.role : "Under investigation";
+
+document.getElementById("dossierAlibi").textContent =
+    "Statement pending review";
+    // Automatically select this suspect for interrogation
+const interrogationSelect =
+    document.querySelector("#interrogationSection select");
+
+if (interrogationSelect) {
+    interrogationSelect.value = name;
+}
 }
 
 function backToSuspects() {
+
+    // Hide the suspect profile
     document.getElementById("suspectProfile")
         .classList.add("hidden");
 
+    // Hide the interrogation room
+    document.getElementById("interrogationSection")
+        .classList.add("hidden");
+
+    // Hide the evidence board
+    document.getElementById("evidenceSection")
+        .classList.add("hidden");
+
+    // Hide the final accusation screen
+    document.getElementById("accusationSection")
+        .classList.add("hidden");
+
+    // Show the suspect selection screen
     document.getElementById("suspectSection")
         .classList.remove("hidden");
+
+    // Scroll back to the suspects
+    document.getElementById("suspectSection")
+        .scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
 }
 
 
@@ -210,9 +310,10 @@ async function sendInterrogation() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    suspect: suspect,
-                    question: question
-                })
+    suspect: suspect,
+    question: question,
+    player_id: playerId
+})
             }
         );
 

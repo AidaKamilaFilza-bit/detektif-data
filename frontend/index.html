@@ -92,12 +92,41 @@
 </section>
 
 <section id="suspectProfile" class="hidden">
-    <h2 id="suspectName"></h2>
-    <p>Suspect investigation file opened.</p>
 
-    <button onclick="backToSuspects()">
+    <h2 id="suspectName"></h2>
+
+    <!-- Suspect picture is inserted here automatically by script.js -->
+
+    <div class="suspect-dossier">
+
+        <div class="dossier-header">
+            <span>🔒 CONFIDENTIAL PERSONNEL FILE</span>
+            <span>CASE: FESTIVAL-001</span>
+        </div>
+
+        <h3>PERSON OF INTEREST</h3>
+
+        <div class="dossier-details">
+            <p><strong>NAME:</strong> <span id="dossierName"></span></p>
+            <p><strong>ROLE:</strong> <span id="dossierRole"></span></p>
+            <p><strong>CLAIMED ALIBI:</strong> <span id="dossierAlibi">Pending review</span></p>
+        </div>
+
+        <div class="dossier-notice">
+            ⚠️ This suspect's statement has not been independently verified.
+            Cross-check their claims against the digital evidence.
+        </div>
+
+        <button type="button" onclick="showInterrogation()">
+            🎙 INTERROGATE SUSPECT
+        </button>
+
+    </div>
+
+    <button type="button" onclick="backToSuspects()">
         ← BACK TO SUSPECTS
     </button>
+
 </section>
 
 <section id="evidenceSection" class="hidden">
