@@ -17,6 +17,7 @@
         <div class="status">● SYSTEM ONLINE</div>
     </header>
 
+
     <main class="container">
         <section class="hero">
             <p class="eyebrow">CLASSIFIED INVESTIGATION</p>
@@ -37,26 +38,60 @@
         <section id="investigation" class="hidden">
             <h2>INVESTIGATION DASHBOARD</h2>
 
-            
+
+<!-- SHARED AI REQUEST COUNTER -->
+<div id="aiUsageBanner" class="ai-usage-banner">
+    <div class="ai-usage-header">
+        <strong>🧠 AI INVESTIGATION CHANCES</strong>
+        <span id="aiUsageCount">0 / 5 USED</span>
+    </div>
+
+    <div class="ai-usage-progress">
+        <div id="aiUsageProgress"></div>
+    </div>
+
+    <p>
+        Shared between Autonomous Investigation and AI Interrogation.
+        Evidence browsing does not use AI chances.
+    </p>
+</div>
+
+
 <div class="cards">
     <div class="card" onclick="showSuspects()">
         <h3>👥 SUSPECTS</h3>
         <p>Investigate Alya, Faris, Daniel and Nadia</p>
     </div>
 
-   
-<div class="card" onclick="showEvidence()">
-    <h3>🔎 EVIDENCE</h3>
-    <p>Examine digital investigation records →</p>
-</div>
 
+<div class="card main-investigation-card" onclick="showInvestigation()">
+    <span class="main-feature-label">⭐ MAIN INVESTIGATION FEATURE</span>
+
+    <h3>🤖 AI DETECTIVE</h3>
+
+    <p>
+        Let your autonomous AI detective search digital evidence,
+        compare suspicious activities, and uncover contradictions.
+    </p>
+
+    <p>
+        You ask the questions. AI investigates.
+        YOU decide who is guilty.
+    </p>
+
+    <strong>🔎 START INVESTIGATION →</strong>
+</div>
 
    <div class="card" onclick="showInterrogation()">
     <h3>💬 INTERROGATION</h3>
     <p>Question suspects using AI →</p>
 </div>
 
-   
+<div class="card" onclick="showEvidence()">
+    <h3>🔎 EVIDENCE</h3>
+    <p>Examine digital investigation records →</p>
+</div>
+
 <div class="card" onclick="showAccusation()">
     <h3>⚖️ FINAL ACCUSATION</h3>
     <p>Submit your investigation findings →</p>
@@ -203,7 +238,7 @@
             maxlength="300"
         >
 
-        
+
 <button id="sendChatBtn">
     SEND
 </button>
@@ -220,6 +255,49 @@
 </p>
 </section>
 
+<!-- AUTONOMOUS INVESTIGATION ROOM -->
+<section id="investigationSection" class="hidden">
+    <h2>🔎 AUTONOMOUS INVESTIGATION ROOM</h2>
+
+    <p>
+        Ask the AI detective to investigate suspicious
+        activities. It will select evidence sources,
+        search the database, and report its findings.
+    </p>
+
+    <div class="investigation-panel">
+        <label for="investigationQuestion">
+            WHAT WOULD YOU LIKE TO INVESTIGATE?
+        </label>
+
+        <textarea
+            id="investigationQuestion"
+            rows="4"
+            maxlength="500"
+            placeholder="Example: Investigate suspicious activities near Booth B-07 between 9:00 PM and 9:15 PM."
+        ></textarea>
+
+        <button id="investigateBtn" type="button">
+            🔎 INVESTIGATE EVIDENCE
+        </button>
+
+        <p id="investigationStatus" role="status"></p>
+
+        <div id="investigationResults" hidden>
+            <h3>📋 FORENSIC INVESTIGATION REPORT</h3>
+            <div id="investigationFindings"></div>
+
+            <h3>⚙️ AGENT TOOL ACTIVITY</h3>
+            <div id="investigationToolActions"></div>
+        </div>
+    </div>
+
+    <p class="interrogation-info">
+        Autonomous investigations share the same
+        5 AI requests per visitor.
+    </p>
+</section>
+<!-- END AUTONOMOUS INVESTIGATION ROOM -->
 
 <section id="accusationSection" class="hidden">
     <h2>⚖️ FINAL ACCUSATION</h2>
@@ -251,7 +329,7 @@
             placeholder="Which evidence supports your accusation?"
         ></textarea>
 
-        
+
 <button id="submitAccusationBtn">
     SUBMIT FINAL ACCUSATION
 </button>
@@ -269,10 +347,10 @@
         🔐 Staff Reset
     </button>
 </div>
-    
+
     <script src="script.js"></script>
 
-    
+
 </body>
 </html>
 

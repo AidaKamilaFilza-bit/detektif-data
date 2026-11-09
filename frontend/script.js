@@ -1,9 +1,41 @@
 const PLAYER_ID_KEY = "detektif_data_player_id";
 
+
+function updateAIUsageBanner(used) {
+    const count = document.getElementById("aiUsageCount");
+    const progress = document.getElementById("aiUsageProgress");
+
+    const safeUsed = Math.max(
+        0,
+        Math.min(Number(used) || 0, MAX_QUESTIONS)
+    );
+
+    if (count) {
+        count.textContent =
+            `${safeUsed} / ${MAX_QUESTIONS} USED`;
+    }
+
+    if (progress) {
+        progress.style.width =
+            `${(safeUsed / MAX_QUESTIONS) * 100}%`;
+    }
+}
+
+
+
 async function loadPlayerQuestionStatus() {
     if (!playerId) {
+        updateAIUsageBanner(0);
     const counter = document.querySelector(".chat-notice");
     const sendButton = document.getElementById("sendChatBtn");
+
+
+const investigateButton = document.getElementById("investigateBtn");
+
+if (investigateButton) {
+    investigateButton.disabled = true;
+}
+
 
     if (counter) {
         counter.textContent = "🔐 Please ask staff to start a new investigation.";
@@ -24,6 +56,7 @@ async function loadPlayerQuestionStatus() {
         if (response.status === 403) {
     playerId = null;
     sessionStorage.removeItem(PLAYER_ID_KEY);
+    updateAIUsageBanner(0);
 
     const counter = document.querySelector(".chat-notice");
     const sendButton = document.getElementById("sendChatBtn");
@@ -37,8 +70,16 @@ async function loadPlayerQuestionStatus() {
         sendButton.disabled = true;
     }
 
+     const investigateButton = document.getElementById("investigateBtn");
+
+    if (investigateButton) {
+        investigateButton.disabled = true;
+    }
+
     return;
 }
+
+
 
 if (!response.ok) {
     console.warn("Unable to load player status:", response.status);
@@ -48,6 +89,7 @@ if (!response.ok) {
         const data = await response.json();
 
         questionsUsed = data.questions_used;
+        updateAIUsageBanner(questionsUsed);
 
         const counter = document.querySelector(".chat-notice");
 
@@ -61,6 +103,15 @@ if (!response.ok) {
         if (sendButton) {
             sendButton.disabled = questionsUsed >= MAX_QUESTIONS;
         }
+
+
+const investigateButton = document.getElementById("investigateBtn");
+
+if (investigateButton) {
+    investigateButton.disabled =
+        !playerId || questionsUsed >= MAX_QUESTIONS;
+}
+
 
     } catch (error) {
         console.error("Unable to load player status:", error);
@@ -98,6 +149,10 @@ function showSuspects() {
 
     // Hide interrogation room
     document.getElementById("interrogationSection")
+        .classList.add("hidden");
+
+    // Hide autonomous investigation room
+    document.getElementById("investigationSection")
         .classList.add("hidden");
 
     // Hide evidence board
@@ -323,6 +378,41 @@ function showInterrogation() {
 }
 
 
+function showInvestigation() {
+
+    // Hide suspect list
+    document.getElementById("suspectSection")
+        .classList.add("hidden");
+
+    // Hide suspect profile
+    document.getElementById("suspectProfile")
+        .classList.add("hidden");
+
+    // Hide evidence board
+    document.getElementById("evidenceSection")
+        .classList.add("hidden");
+
+    // Hide interrogation room
+    document.getElementById("interrogationSection")
+        .classList.add("hidden");
+
+    // Hide final accusation
+    document.getElementById("accusationSection")
+        .classList.add("hidden");
+
+    // Show autonomous investigation room
+    const investigation = document.getElementById(
+        "investigationSection"
+    );
+
+    investigation.classList.remove("hidden");
+
+    investigation.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
 let questionsUsed = 0;
 const MAX_QUESTIONS = 5;
 let interrogationBusy = false;
@@ -414,10 +504,8 @@ if (!response.ok) {
             "suspect-message"
         );
 
-        questionsUsed++;
 
-        document.querySelector(".chat-notice").textContent =
-            `${questionsUsed}/${MAX_QUESTIONS} AI questions used`;
+await loadPlayerQuestionStatus();
 
     } catch (error) {
         loading.remove();
@@ -427,17 +515,29 @@ if (!response.ok) {
         );
         console.error(error);
 
-    } finally {
-        interrogationBusy = false;
-        button.disabled = sessionUnauthorized || questionsUsed >= MAX_QUESTIONS;
+
+} finally {
+    interrogationBusy = false;
+
+    if (sessionUnauthorized) {
+        playerId = null;
+        sessionStorage.removeItem(PLAYER_ID_KEY);
     }
+
+    await loadPlayerQuestionStatus();
+
+    button.disabled =
+        !playerId || questionsUsed >= MAX_QUESTIONS;
+}
+
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     const button = document.getElementById("sendChatBtn");
     const input = document.getElementById("chatInput");
 
-    button.disabled = false;
+    button.disabled = true;
+loadPlayerQuestionStatus();
 
     button.addEventListener("click", sendInterrogation);
 
@@ -558,6 +658,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+// NEW: Autonomous Investigation Agent
 
 document.getElementById("staffResetBtn").addEventListener("click", async () => {
     const pin = prompt("Enter staff passphrase to start a new investigation:");
@@ -601,3 +702,123 @@ document.getElementById("staffResetBtn").addEventListener("click", async () => {
 document.addEventListener("DOMContentLoaded", () => {
     loadPlayerQuestionStatus();
 });
+
+
+async function runAutonomousInvestigation(question) {
+    if (!playerId) {
+        return {
+            error: "Please ask exhibition staff to start a new investigation."
+        };
+    }
+
+    try {
+        const response = await fetch(
+            "https://detektif-data-backend.onrender.com/investigate",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    question: question,
+                    player_id: playerId
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                error: data.detail || "Investigation failed."
+            };
+        }
+
+        return data;
+
+    } catch (error) {
+        console.error("Autonomous investigation error:", error);
+
+        return {
+            error: "Unable to connect to the investigation agent."
+        };
+    }
+}
+
+
+
+document.getElementById("investigateBtn")
+    .addEventListener("click", async () => {
+
+        const input = document.getElementById("investigationQuestion");
+        const button = document.getElementById("investigateBtn");
+        const status = document.getElementById("investigationStatus");
+        const results = document.getElementById("investigationResults");
+        const findings = document.getElementById("investigationFindings");
+        const actions = document.getElementById("investigationToolActions");
+
+        const question = input.value.trim();
+
+        if (!question) {
+            status.textContent = "Please enter an investigation question.";
+            return;
+        }
+
+        button.disabled = true;
+        results.hidden = true;
+        status.textContent = "🔎 AI detective is investigating evidence...";
+
+        try {
+            const data = await runAutonomousInvestigation(question);
+
+            if (data.error) {
+                status.textContent = data.error;
+                return;
+            }
+
+            findings.textContent = data.findings || "No findings returned.";
+            findings.style.whiteSpace = "pre-wrap";
+
+            actions.replaceChildren();
+
+            const toolActions = data.tool_actions || [];
+
+            if (toolActions.length === 0) {
+                actions.textContent = "No evidence searches were recorded.";
+            } else {
+                toolActions.forEach(action => {
+                    const item = document.createElement("p");
+
+                    item.textContent =
+                        `${action.success ? "✓" : "✗"} ` +
+                        `${action.tool}: ${action.table} | ` +
+                        `Person: ${action.person} | ` +
+                        `Records: ${action.records_found}`;
+
+                    actions.appendChild(item);
+                });
+            }
+
+            results.hidden = false;
+            status.textContent = "Investigation completed.";
+
+            if (typeof loadPlayerQuestionStatus === "function") {
+                await loadPlayerQuestionStatus();
+            }
+
+        } catch (error) {
+            console.error("Investigation UI error:", error);
+            status.textContent = "An unexpected error occurred.";
+
+
+} finally {
+    if (typeof loadPlayerQuestionStatus === "function") {
+        await loadPlayerQuestionStatus();
+    }
+
+    button.disabled =
+        !playerId || questionsUsed >= MAX_QUESTIONS;
+}
+
+
+    });
