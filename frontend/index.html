@@ -60,54 +60,77 @@
     </p>
 </div>
 
+<div class="how-to-play">
+    <h2>🔎 HOW TO PLAY</h2>
+    <p>
+        Meet the suspects → Question their alibis →
+        Investigate evidence → Verify the findings →
+        Make your final accusation.
+    </p>
+    <p class="how-to-play-note">
+        💡 Need help? Ask the AI Investigation Coach at any stage.
+    </p>
+</div>
 
 <div class="cards">
+
+    <!-- STEP 01: SUSPECTS -->
     <div class="card" onclick="showSuspects()">
+        <span class="step-label">STEP 01</span>
         <h3>👥 SUSPECTS</h3>
-        <p>Investigate Alya, Faris, Daniel and Nadia</p>
+        <p>Meet Alya, Faris, Daniel and Nadia. Explore their motives and alibis.</p>
     </div>
 
+    <!-- STEP 02: INTERROGATION -->
+    <div class="card" onclick="showInterrogation()">
+        <span class="step-label">STEP 02</span>
+        <h3>💬 INTERROGATION</h3>
+        <p>Question suspects about their whereabouts and investigate their claims →</p>
+    </div>
 
-<div class="card main-investigation-card" onclick="showInvestigation()">
-    <span class="main-feature-label">⭐ MAIN INVESTIGATION FEATURE</span>
+    <!-- STEP 03: AI DETECTIVE -->
+    <div class="card main-investigation-card" onclick="showInvestigation()">
+        <span class="main-feature-label">⭐ MAIN INVESTIGATION FEATURE</span>
+        <span class="step-label">STEP 03</span>
 
-    <h3>🤖 AI DETECTIVE</h3>
+        <h3>🤖 AI DETECTIVE</h3>
 
-    <p>
-        Let your autonomous AI detective search digital evidence,
-        compare suspicious activities, and uncover contradictions.
-    </p>
+        <p>
+            Let your autonomous AI detective search digital evidence,
+            compare suspicious activities, and uncover contradictions.
+        </p>
 
-    <p>
-        You ask the questions. AI investigates.
-        YOU decide who is guilty.
-    </p>
+        <p>
+            You ask the questions. AI investigates.
+            YOU decide who is guilty.
+        </p>
 
-    <strong>🔎 START INVESTIGATION →</strong>
-</div>
+        <strong>🔎 START INVESTIGATION →</strong>
+    </div>
 
-   <div class="card" onclick="showInterrogation()">
-    <h3>💬 INTERROGATION</h3>
-    <p>Question suspects using AI →</p>
-</div>
+    <!-- STEP 04: EVIDENCE -->
+    <div class="card" onclick="showEvidence()">
+        <span class="step-label">STEP 04</span>
+        <h3>🔎 EVIDENCE</h3>
+        <p>Explore database records and verify the AI Detective's findings →</p>
+    </div>
 
-<div class="card" onclick="showEvidence()">
-    <h3>🔎 EVIDENCE</h3>
-    <p>Examine digital investigation records →</p>
-</div>
+    <!-- STEP 05: FINAL ACCUSATION -->
+    <div class="card" onclick="showAccusation()">
+        <span class="step-label">STEP 05</span>
+        <h3>⚖️ FINAL ACCUSATION</h3>
+        <p>Identify your suspect and explain your evidence-based reasoning →</p>
+    </div>
 
-<div class="card" onclick="showAccusation()">
-    <h3>⚖️ FINAL ACCUSATION</h3>
-    <p>Submit your investigation findings →</p>
-</div>
-
-<div class="card" onclick="showCoach()">
-    <h3>🧠 AI INVESTIGATION COACH</h3>
-    <p>
-        Get progressive hints, challenge your reasoning,
-        and strengthen your investigation →
-    </p>
-</div>
+    <!-- OPTIONAL: AI COACH -->
+    <div class="card" onclick="showCoach()">
+        <span class="step-label">OPTIONAL HELP</span>
+        <h3>🧠 AI INVESTIGATION COACH</h3>
+        <p>
+            Get progressive hints, challenge your reasoning,
+            and strengthen your investigation →
+        </p>
+    </div>
 
 </div>
 

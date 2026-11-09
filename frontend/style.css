@@ -1168,3 +1168,45 @@ button:not(#startBtn):hover {
         letter-spacing: 2px;
     }
 }
+
+
+/* How to Play instructions */
+.how-to-play {
+    margin: 20px 0 28px;
+    padding: 20px 24px;
+    background: rgba(255, 215, 0, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    border-radius: 14px;
+}
+
+.how-to-play h2 {
+    color: #ffd700;
+    font-size: 20px;
+    margin: 0 0 12px;
+}
+
+.how-to-play p {
+    color: #f0e9e9;
+    font-size: 16px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.how-to-play .how-to-play-note {
+    margin-top: 8px;
+    color: #d6c4cc;
+    font-size: 14px;
+}
+
+/* Dashboard step labels */
+.step-label {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 5px 10px;
+    border: 1px solid rgba(255, 215, 0, 0.45);
+    border-radius: 6px;
+    color: #ffd700;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
