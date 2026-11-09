@@ -21,100 +21,95 @@ function updateAIUsageBanner(used) {
     }
 }
 
-
-
 async function loadPlayerQuestionStatus() {
-    if (!playerId) {
-        updateAIUsageBanner(0);
+
     const counter = document.querySelector(".chat-notice");
     const sendButton = document.getElementById("sendChatBtn");
+    const investigateButton = document.getElementById("investigateBtn");
+    const coachButton = document.getElementById("coachBtn");
 
+    // No authorized investigation session
+    if (!playerId) {
+        updateAIUsageBanner(0);
 
-const investigateButton = document.getElementById("investigateBtn");
+        if (counter) {
+            counter.textContent =
+                "🔐 Please ask staff to start a new investigation.";
+        }
 
-if (investigateButton) {
-    investigateButton.disabled = true;
-}
+        if (sendButton) sendButton.disabled = true;
+        if (investigateButton) investigateButton.disabled = true;
+        if (coachButton) coachButton.disabled = true;
 
-
-    if (counter) {
-        counter.textContent = "🔐 Please ask staff to start a new investigation.";
+        return;
     }
-
-    if (sendButton) {
-        sendButton.disabled = true;
-    }
-
-    return;
-}
 
     try {
         const response = await fetch(
             `https://detektif-data-backend.onrender.com/player/status/${playerId}`
         );
 
+        // Session expired or unauthorized
         if (response.status === 403) {
-    playerId = null;
-    sessionStorage.removeItem(PLAYER_ID_KEY);
-    updateAIUsageBanner(0);
+            playerId = null;
+            sessionStorage.removeItem(PLAYER_ID_KEY);
+            updateAIUsageBanner(0);
 
-    const counter = document.querySelector(".chat-notice");
-    const sendButton = document.getElementById("sendChatBtn");
+            if (counter) {
+                counter.textContent =
+                    "🔐 Session expired. Please ask staff to start a new investigation.";
+            }
 
-    if (counter) {
-        counter.textContent =
-            "🔐 Session expired. Please ask staff to start a new investigation.";
-    }
+            if (sendButton) sendButton.disabled = true;
+            if (investigateButton) investigateButton.disabled = true;
+            if (coachButton) coachButton.disabled = true;
 
-    if (sendButton) {
-        sendButton.disabled = true;
-    }
+            return;
+        }
 
-     const investigateButton = document.getElementById("investigateBtn");
-
-    if (investigateButton) {
-        investigateButton.disabled = true;
-    }
-
-    return;
-}
-
-
-
-if (!response.ok) {
-    console.warn("Unable to load player status:", response.status);
-    return;
-}
+        if (!response.ok) {
+            console.warn(
+                "Unable to load player status:",
+                response.status
+            );
+            return;
+        }
 
         const data = await response.json();
 
         questionsUsed = data.questions_used;
         updateAIUsageBanner(questionsUsed);
 
-        const counter = document.querySelector(".chat-notice");
-
         if (counter) {
             counter.textContent =
-                `${questionsUsed}/${MAX_QUESTIONS} AI questions used`;
+                `${questionsUsed}/${MAX_QUESTIONS} AI requests used`;
         }
 
-        const sendButton = document.getElementById("sendChatBtn");
+        const limitReached =
+            questionsUsed >= MAX_QUESTIONS;
 
+        // Suspect interrogation
         if (sendButton) {
-            sendButton.disabled = questionsUsed >= MAX_QUESTIONS;
+            sendButton.disabled =
+                limitReached || interrogationBusy;
         }
 
+        // Autonomous investigation
+        if (investigateButton) {
+            investigateButton.disabled = limitReached;
+        }
 
-const investigateButton = document.getElementById("investigateBtn");
-
-if (investigateButton) {
-    investigateButton.disabled =
-        !playerId || questionsUsed >= MAX_QUESTIONS;
-}
-
+        // AI Investigation Coach
+        if (coachButton) {
+            coachButton.disabled =
+                limitReached || coachBusy;
+        }
 
     } catch (error) {
-        console.error("Unable to load player status:", error);
+        console.error(
+            "Unable to load player status:",
+            error
+        );
     }
 }
 
@@ -822,3 +817,152 @@ document.getElementById("investigateBtn")
 
 
     });
+
+/* =========================================
+   AI INVESTIGATION COACH
+========================================= */
+
+let coachBusy = false;
+
+function showCoach() {
+    const sections = [
+        "suspectSection",
+        "suspectProfile",
+        "evidenceSection",
+        "interrogationSection",
+        "investigationSection",
+        "accusationSection"
+    ];
+
+    sections.forEach(id => {
+        document.getElementById(id)
+            ?.classList.add("hidden");
+    });
+
+    const coachSection =
+        document.getElementById("coachSection");
+
+    coachSection.classList.remove("hidden");
+
+    coachSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+async function requestCoaching() {
+    const button = document.getElementById("coachBtn");
+    const status = document.getElementById("coachStatus");
+    const results = document.getElementById("coachResults");
+    const output = document.getElementById("coachResponse");
+
+    const question = document
+        .getElementById("coachQuestion")
+        .value.trim();
+
+    const hintLevel = Number(
+        document.getElementById("coachHintLevel").value
+    );
+
+    if (coachBusy) return;
+
+    if (!playerId) {
+        status.textContent =
+            "Please ask staff to start an investigation.";
+        return;
+    }
+
+    if (questionsUsed >= MAX_QUESTIONS) {
+        status.textContent =
+            "You have used all 5 AI requests.";
+        return;
+    }
+
+    if (!question) {
+        status.textContent =
+            "Please explain your reasoning first.";
+        return;
+    }
+
+    coachBusy = true;
+    button.disabled = true;
+    results.hidden = true;
+
+    status.textContent =
+        "🧠 Your investigation coach is thinking...";
+
+    try {
+        const response = await fetch(
+            "https://detektif-data-backend.onrender.com/coach",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    player_id: playerId,
+                    question: question,
+                    hint_level: hintLevel,
+                    evidence_context: ""
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            status.textContent =
+                data.detail || "Coaching unavailable.";
+            return;
+        }
+
+        output.textContent =
+            data.coaching || "No coaching response.";
+
+        results.hidden = false;
+        status.textContent =
+            `Hint Level ${data.hint_level} completed.`;
+
+    } catch (error) {
+        console.error("Coach error:", error);
+        status.textContent =
+            "Unable to contact the Coach Agent.";
+    } finally {
+        coachBusy = false;
+
+        await loadPlayerQuestionStatus();
+
+        button.disabled =
+            !playerId || questionsUsed >= MAX_QUESTIONS;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const button = document.getElementById("coachBtn");
+
+    if (button) {
+        button.addEventListener("click", requestCoaching);
+    }
+});
+
+
+[
+    "showSuspects",
+    "showEvidence",
+    "showInterrogation",
+    "showInvestigation",
+    "showAccusation",
+    "selectSuspect",
+    "backToSuspects"
+].forEach(name => {
+    const original = window[name];
+
+    if (typeof original === "function") {
+        window[name] = function (...args) {
+            document.getElementById("coachSection")
+                ?.classList.add("hidden");
+
+            return original.apply(this, args);
+        };
+    }
+});

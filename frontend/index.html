@@ -51,7 +51,8 @@
     </div>
 
     <p>
-        Shared between Autonomous Investigation and AI Interrogation.
+        Shared between AI Detective, Suspect Interrogation,
+        and AI Investigation Coach.
         Evidence browsing does not use AI chances.
     </p>
 </div>
@@ -95,6 +96,14 @@
 <div class="card" onclick="showAccusation()">
     <h3>⚖️ FINAL ACCUSATION</h3>
     <p>Submit your investigation findings →</p>
+</div>
+
+<div class="card" onclick="showCoach()">
+    <h3>🧠 AI INVESTIGATION COACH</h3>
+    <p>
+        Get progressive hints, challenge your reasoning,
+        and strengthen your investigation →
+    </p>
 </div>
 
 </div>
@@ -246,7 +255,7 @@
     </div>
 
    <p class="interrogation-info">
-    You have 5 AI interrogation questions per investigation.
+    You have 5 shared AI requests per investigation.
     Choose your questions carefully.
 </p>
 
@@ -298,6 +307,63 @@
     </p>
 </section>
 <!-- END AUTONOMOUS INVESTIGATION ROOM -->
+
+<!-- AI INVESTIGATION COACH -->
+<section id="coachSection" class="hidden">
+
+    <h2>🧠 AI INVESTIGATION COACH</h2>
+
+    <p>
+        Need guidance? Your AI Coach will challenge your
+        reasoning without revealing the culprit.
+    </p>
+
+    <div class="investigation-panel">
+
+        <label for="coachQuestion">
+            WHAT DO YOU THINK HAPPENED?
+        </label>
+
+        <textarea
+            id="coachQuestion"
+            rows="4"
+            maxlength="500"
+            placeholder="Example: I suspect someone because they had access to Booth B-07. Is that enough evidence?"
+        ></textarea>
+
+        <label for="coachHintLevel">
+            SELECT HINT STRENGTH
+        </label>
+
+        <select id="coachHintLevel">
+            <option value="1">Level 1 — Subtle Hint</option>
+            <option value="2">Level 2 — Guided Hint</option>
+            <option value="3">Level 3 — Strong Hint</option>
+        </select>
+
+        <button id="coachBtn" type="button">
+            🧠 REQUEST COACHING
+        </button>
+
+        <p id="coachStatus" role="status"></p>
+
+        <div id="coachResults" hidden>
+            <h3>🎓 DETECTIVE MENTOR</h3>
+            <div
+                id="coachResponse"
+                style="white-space: pre-wrap;"
+            ></div>
+        </div>
+
+    </div>
+
+    <p class="interrogation-info">
+        Coaching shares your 5 AI requests with
+        investigation and interrogation.
+    </p>
+
+</section>
+<!-- END AI INVESTIGATION COACH -->
 
 <section id="accusationSection" class="hidden">
     <h2>⚖️ FINAL ACCUSATION</h2>
