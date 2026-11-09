@@ -115,26 +115,51 @@ async function loadPlayerQuestionStatus() {
 
 let playerId = sessionStorage.getItem(PLAYER_ID_KEY);
 
-document.addEventListener("DOMContentLoaded", () => {
-    const startButton = document.getElementById("startBtn");
-    const hero = document.querySelector(".hero");
-    const investigation = document.getElementById("investigation");
+        document.addEventListener("DOMContentLoaded", () => {
 
-    startButton.addEventListener("click", () => {
-        // Hide the welcome screen
-        hero.classList.add("hidden");
+            const startButton = document.getElementById("startBtn");
+            const hero = document.querySelector(".hero");
+            const investigation = document.getElementById("investigation");
+            const incidentOverlay = document.getElementById("incidentOverlay");
 
-        // Display the investigation dashboard
-        investigation.classList.remove("hidden");
+            // STEP 1: Click START INVESTIGATION
+            startButton.addEventListener("click", () => {
 
-        // Scroll to the dashboard
-        investigation.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
+                // Hide the original welcome screen
+                hero.classList.add("hidden");
+
+                // Display the incident report
+                incidentOverlay.hidden = false;
+
+                // Prevent background scrolling
+                document.body.style.overflow = "hidden";
+
+                // Focus on the incident report
+                incidentOverlay.focus();
+            });
+
+
+            // STEP 2: Click anywhere on the incident report
+            incidentOverlay.addEventListener("click", () => {
+
+                // Close incident report
+                incidentOverlay.hidden = true;
+
+                // Restore scrolling
+                document.body.style.overflow = "";
+
+                // Display investigation dashboard
+                investigation.classList.remove("hidden");
+
+                // Scroll to dashboard
+                investigation.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+            });
+
         });
-    });
-});
-
 
 function showSuspects() {
 
@@ -158,10 +183,20 @@ function showSuspects() {
     document.getElementById("accusationSection")
         .classList.add("hidden");
 
+    
     // Show suspect list
-    document.getElementById("suspectSection")
-        .classList.remove("hidden");
+    const suspects = document.getElementById("suspectSection");
+
+    suspects.classList.remove("hidden");
+
+    // Automatically scroll to Suspect Files
+    suspects.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
 }
+
+
 
 function selectSuspect(name) {
     document.getElementById("suspectSection")
@@ -227,6 +262,14 @@ const interrogationSelect =
 if (interrogationSelect) {
     interrogationSelect.value = name;
 }
+
+    // Automatically scroll to the selected suspect profile
+    document.getElementById("suspectProfile")
+        .scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
 }
 
 function backToSuspects() {

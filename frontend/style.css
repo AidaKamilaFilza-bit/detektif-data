@@ -1212,109 +1212,233 @@ button:not(#startBtn):hover {
 }
 
 
-/* CINEMATIC CASE INTRODUCTION */
+/* =========================================
+   DETEKTIF DATA — INCIDENT REPORT POP-UP
+   ========================================= */
 
-.case-intro {
+.incident-overlay[hidden] {
+    display: none !important;
+}
+
+.incident-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(7px);
+    cursor: pointer;
+    overflow-y: auto;
+}
+
+.incident-report {
+    width: 100%;
+    max-width: 760px;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    padding: 35px;
+    border: 1px solid #80404a;
+    border-left: 5px solid #f3c52b;
+    border-radius: 14px;
+    background: linear-gradient(145deg, #301923, #180f17);
+    color: #f2e9da;
+    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.65);
+    line-height: 1.75;
+    animation: incidentAppear 0.45s ease-out;
+}
+
+.incident-classified,
+.incident-date {
     text-align: center;
-    max-width: 900px;
-    margin: 35px auto 60px;
-    animation: caseFadeIn 0.9s ease-out;
-}
-
-.case-date {
-    color: #9fb5cc;
-    font-size: 12px;
-    letter-spacing: 3px;
-    margin-bottom: 20px;
-}
-
-.case-title {
-    color: #f4c978;
-    font-size: clamp(20px, 4vw, 30px);
-    letter-spacing: 2px;
-    margin: 18px 0 30px;
-}
-
-.case-briefing {
-    text-align: left;
-    background: linear-gradient(
-        135deg,
-        rgba(15, 30, 51, 0.96),
-        rgba(10, 20, 36, 0.96)
-    );
-    border: 1px solid rgba(112, 158, 199, 0.3);
-    border-left: 4px solid #f4c978;
-    border-radius: 12px;
-    padding: 28px;
-    margin: 25px auto;
-    line-height: 1.85;
-    color: #dce7f3;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
-}
-
-.case-briefing p {
-    margin-bottom: 15px;
-}
-
-.case-alert {
-    color: #f4c978;
-    font-weight: 700;
     letter-spacing: 2px;
     font-size: 12px;
+    color: #d0bfc1;
 }
 
-.case-mission {
-    max-width: 700px;
-    margin: 25px auto;
-    line-height: 1.8;
-    color: #dce7f3;
+.incident-report h2 {
+    text-align: center;
+    color: #f3c52b;
+    font-size: clamp(22px, 4vw, 32px);
+    margin: 20px 0;
 }
 
-.case-tagline {
-    color: #f4c978;
+.incident-alert {
+    color: #f3c52b;
     font-weight: 700;
     letter-spacing: 2px;
-    margin: 25px auto;
 }
 
-.case-intro #startBtn {
-    margin-top: 15px;
-    padding: 16px 30px;
+.incident-report p {
+    margin-bottom: 16px;
+}
+
+.incident-tagline {
+    color: #f3c52b;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 25px;
+}
+
+.incident-continue {
+    text-align: center;
     font-weight: 700;
     letter-spacing: 1px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-top: 25px;
+    color: #ffffff;
+    animation: incidentPulse 1.6s infinite;
 }
 
-.case-intro #startBtn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 25px rgba(244, 201, 120, 0.3);
-}
-
-@keyframes caseFadeIn {
+@keyframes incidentAppear {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(25px) scale(0.97);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes incidentPulse {
+    50% {
+        opacity: 0.45;
     }
 }
 
 @media (max-width: 600px) {
-    .case-briefing {
-        padding: 20px;
+    .incident-overlay {
+        padding: 12px;
     }
 
-    .case-tagline {
-        letter-spacing: 1px;
-        line-height: 1.7;
+    .incident-report {
+        padding: 22px;
+        max-height: calc(100vh - 24px);
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .case-intro {
+    .incident-report,
+    .incident-continue {
         animation: none;
+    }
+}
+
+
+/* FINAL ACCUSATION - MATCH MAIN DASHBOARD THEME */
+
+.main-accusation-card {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: 650px;
+    justify-self: center;
+    margin: 15px auto;
+    padding: 28px;
+    box-sizing: border-box;
+    text-align: center;
+
+    border: 2px solid #a93650;
+    background: linear-gradient(
+        135deg,
+        rgba(75, 27, 43, 0.95),
+        rgba(28, 18, 27, 0.98)
+    );
+
+    box-shadow: 0 0 25px rgba(190, 38, 72, 0.15);
+    border-radius: 16px;
+}
+
+.main-accusation-card h3 {
+    color: #ffd0d8;
+    font-size: 25px;
+}
+
+.main-accusation-card p {
+    line-height: 1.7;
+}
+
+.main-accusation-card strong {
+    display: inline-block;
+    margin-top: 12px;
+    color: #ffbdca;
+    letter-spacing: 1px;
+}
+
+.main-accusation-card:hover {
+    transform: translateY(-4px);
+    border-color: #e44b69;
+    box-shadow: 0 0 30px rgba(228, 75, 105, 0.3);
+}
+
+
+
+/* ==========================================
+   INVESTIGATION WORKSPACE LAYOUT
+   ========================================== */
+
+/* Suspect Files - spacious full-width section */
+#suspectSection {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 30px;
+    box-sizing: border-box;
+}
+
+/* Individual Suspect Profile - full width */
+#suspectProfile {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 30px;
+    box-sizing: border-box;
+}
+
+/* Evidence + Interrogation - side by side */
+#interrogationSection,
+#evidenceSection {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* AI Detective - spacious full-width workspace */
+#investigationSection {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 30px;
+    box-sizing: border-box;
+}
+
+/* Final Accusation - full width, centred content */
+#accusationSection {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 30px;
+    box-sizing: border-box;
+}
+
+/* Keep workspace content from overflowing */
+#suspectSection *,
+#suspectProfile *,
+#interrogationSection *,
+#evidenceSection *,
+#investigationSection *,
+#accusationSection * {
+    box-sizing: border-box;
+}
+
+/* Mobile layout */
+@media (max-width: 768px) {
+    #suspectSection,
+    #suspectProfile,
+    #interrogationSection,
+    #evidenceSection,
+    #investigationSection,
+    #accusationSection {
+        width: 100%;
+        max-width: 100%;
     }
 }
 

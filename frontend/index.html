@@ -21,28 +21,52 @@
     </header>
 
     <main class="container">
-        <section class="hero case-intro">
-            <p class="eyebrow">🔒 CLASSIFIED • CASE FILE 001</p>
-
-            <p class="case-date">
-                5 NOVEMBER 2026 | FESTIVAL IDEA
-            </p>
+        <section class="hero">
+            <p class="eyebrow">CLASSIFIED INVESTIGATION</p>
 
             <h1>MISTERI DI<br>FESTIVAL IDEA</h1>
 
-            <h2 class="case-title">THE MISSING PROTOTYPE</h2>
+            <p class="description">
+                Four suspects. One mysterious incident.
+                Examine the evidence, interrogate suspects,
+                and uncover the truth.
+            </p>
 
-            <div class="case-briefing">
-                <p class="case-alert">⚠️ INCIDENT REPORTED</p>
+            <button id="startBtn" type="button">
+                START INVESTIGATION →
+            </button>
+        </section>
+        
+        <!-- CINEMATIC INCIDENT REPORT POP-UP -->
+        <div id="incidentOverlay"
+            class="incident-overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="incidentTitle"
+            tabindex="-1"
+            hidden>
+
+            <div class="incident-report">
+                <p class="incident-classified">
+                    🔒 CLASSIFIED • CASE FILE 001
+                </p>
+
+                <p class="incident-date">
+                    5 NOVEMBER 2026 | FESTIVAL IDEA
+                </p>
+
+                <h2 id="incidentTitle">THE MISSING PROTOTYPE</h2>
+
+                <p class="incident-alert">⚠ INCIDENT REPORTED</p>
 
                 <p>
-                    During the Festival Idea, a valuable innovation
+                    During Festival Idea, a valuable innovation
                     prototype mysteriously disappeared from
                     <strong>Booth B-07</strong>.
                 </p>
 
                 <p>
-                    Four individuals are now under suspicion:
+                    Four individuals are under suspicion:
                     <strong>Alya, Faris, Daniel, and Nadia.</strong>
                 </p>
 
@@ -56,25 +80,15 @@
                     Cashless payments. Locker access.
                 </p>
 
-                <p>
-                    Somewhere within these records lies the truth.
+                <p class="incident-tagline">
+                    FOUR SUSPECTS. ONE MISSING PROTOTYPE. ONE TRUTH.
+                </p>
+
+                <p class="incident-continue">
+                    CLICK ANYWHERE TO BEGIN YOUR INVESTIGATION →
                 </p>
             </div>
-
-            <p class="case-mission">
-                YOUR MISSION: Interrogate the suspects, investigate
-                the digital evidence with your autonomous AI Detective,
-                and identify who is responsible.
-            </p>
-
-            <p class="case-tagline">
-                FOUR SUSPECTS. ONE MISSING PROTOTYPE. ONE TRUTH.
-            </p>
-
-            <button id="startBtn">
-                🔎 BEGIN INVESTIGATION →
-            </button>
-        </section>
+        </div>
 
         <section id="investigation" class="hidden">
             <h2>INVESTIGATION DASHBOARD</h2>
@@ -126,25 +140,27 @@
         <p>Question suspects about their whereabouts and investigate their claims →</p>
     </div>
 
-    <!-- STEP 03: AI DETECTIVE -->
-    <div class="card main-investigation-card" onclick="showInvestigation()">
-        <span class="main-feature-label">⭐ MAIN INVESTIGATION FEATURE</span>
-        <span class="step-label">STEP 03</span>
+   
+<div class="card main-investigation-card"
+     onclick="showInvestigation()">
 
-        <h3>🤖 AI DETECTIVE</h3>
+    <span class="step-label">STEP 03</span>
 
-        <p>
-            Let your autonomous AI detective search digital evidence,
-            compare suspicious activities, and uncover contradictions.
-        </p>
+    <span class="main-feature-label">
+        ⭐ MAIN INVESTIGATION FEATURE
+    </span>
 
-        <p>
-            You ask the questions. AI investigates.
-            YOU decide who is guilty.
-        </p>
+    <h3>🤖 AI DETECTIVE</h3>
 
-        <strong>🔎 START INVESTIGATION →</strong>
-    </div>
+    <p>
+        Let your autonomous AI detective search digital evidence,
+        compare suspicious activities, and uncover contradictions.
+        You ask the questions. AI investigates. YOU decide who is guilty.
+    </p>
+
+    <strong>🔎 START INVESTIGATION →</strong>
+
+</div>
 
     <!-- STEP 04: EVIDENCE -->
     <div class="card" onclick="showEvidence()">
@@ -153,14 +169,33 @@
         <p>Explore database records and verify the AI Detective's findings →</p>
     </div>
 
-    <!-- STEP 05: FINAL ACCUSATION -->
-    <div class="card" onclick="showAccusation()">
-        <span class="step-label">STEP 05</span>
-        <h3>⚖️ FINAL ACCUSATION</h3>
-        <p>Identify your suspect and explain your evidence-based reasoning →</p>
-    </div>
+    
+<div class="card main-accusation-card"
+     onclick="showAccusation()">
 
-    <!-- OPTIONAL: AI COACH -->
+    <span class="main-feature-label">
+        ⚖️ FINAL CHALLENGE
+    </span>
+
+    <h3>FINAL ACCUSATION</h3>
+
+    <span class="step-label">STEP 05</span>
+
+    <p>
+        You've examined the suspects, questioned their
+        alibis and uncovered digital evidence.
+    </p>
+
+    <p>
+        Now it's time to make your decision.
+        Who is responsible for the missing prototype?
+    </p>
+
+    <strong>⚖️ SUBMIT YOUR ACCUSATION →</strong>
+</div>
+
+
+    <!-- OPTIONAL: AI COACH
     <div class="card" onclick="showCoach()">
         <span class="step-label">OPTIONAL HELP</span>
         <h3>🧠 AI INVESTIGATION COACH</h3>
@@ -170,7 +205,7 @@
         </p>
     </div>
 
-</div>
+</div> -->
 
 <section id="suspectSection" class="hidden">
     <h2>👥 SUSPECT FILES</h2>
@@ -373,7 +408,7 @@
 <!-- END AUTONOMOUS INVESTIGATION ROOM -->
 
 <!-- AI INVESTIGATION COACH -->
-<section id="coachSection" class="hidden">
+<!-- <section id="coachSection" class="hidden">
 
     <h2>🧠 AI INVESTIGATION COACH</h2>
 
@@ -427,7 +462,7 @@
     </p>
 
 </section>
-<!-- END AI INVESTIGATION COACH -->
+END AI INVESTIGATION COACH -->
 
 <section id="accusationSection" class="hidden">
     <h2>⚖️ FINAL ACCUSATION</h2>
