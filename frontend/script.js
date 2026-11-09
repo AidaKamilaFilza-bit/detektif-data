@@ -304,19 +304,27 @@ function backToSuspects() {
 
 
 
+
 function showEvidence() {
-    document.getElementById("suspectSection")
-        .classList.add("hidden");
 
-    document.getElementById("suspectProfile")
-        .classList.add("hidden");
+    // Hide all other sections
+    document.getElementById("suspectSection").classList.add("hidden");
+    document.getElementById("suspectProfile").classList.add("hidden");
+    document.getElementById("interrogationSection").classList.add("hidden");
+    document.getElementById("investigationSection").classList.add("hidden");
+    document.getElementById("accusationSection").classList.add("hidden");
 
-    document.getElementById("evidenceSection")
-        .classList.remove("hidden");
+    // Show Evidence Board only
+    const evidence = document.getElementById("evidenceSection");
+    evidence.classList.remove("hidden");
 
-    document.getElementById("evidenceSection")
-        .scrollIntoView({ behavior: "smooth" });
+    // Scroll to Evidence Board
+    evidence.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
 }
+
 
 async function loadEvidence() {
     const person = document.getElementById("evidencePerson").value;
